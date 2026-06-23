@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../data/widget_data.dart';
 import '../data/widget_examples.dart';
 import '../theme/app_colors.dart';
+import '../services/persistence_service.dart';
 
 class DemoScaffold extends StatefulWidget {
   final String widgetId;
@@ -105,6 +106,37 @@ class _DemoScaffoldState extends State<DemoScaffold> {
         behavior: SnackBarBehavior.floating,
       ),
     );
+  }
+
+  void _toggleFavoriteFromWidget() async {
+    final service = await PersistenceService.init();
+    await service.toggleFavorite(widget.widgetId);
+    
+    if (mounted) {
+      final isFav = PersistenceService.favoritesNotifier.value.contains(widget.widgetId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.codeEditorSurface,
+          content: Row(
+            children: [
+              Icon(
+                isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: isFav ? Colors.redAccent : Colors.white70,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                isFav ? 'Added to favorites!' : 'Removed from favorites',
+                style: GoogleFonts.inter(color: Colors.white, fontSize: 13),
+              ),
+            ],
+          ),
+          duration: const Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      );
+    }
   }
 
   @override
@@ -290,6 +322,20 @@ class _DemoScaffoldState extends State<DemoScaffold> {
               style: GoogleFonts.dmSans(
                   fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white)),
           actions: [
+            ValueListenableBuilder<Set<String>>(
+              valueListenable: PersistenceService.favoritesNotifier,
+              builder: (context, favorites, _) {
+                final isFav = favorites.contains(widget.widgetId);
+                return IconButton(
+                  icon: Icon(
+                    isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                    color: isFav ? Colors.redAccent : Colors.white70,
+                  ),
+                  tooltip: isFav ? 'Remove from Favorites' : 'Add to Favorites',
+                  onPressed: _toggleFavoriteFromWidget,
+                );
+              },
+            ),
             TextButton.icon(
               onPressed: _resetCode,
               icon: const Icon(Icons.restart_alt_rounded,
@@ -434,6 +480,22 @@ class _DemoScaffoldState extends State<DemoScaffold> {
             title: Text(title,
                 style: GoogleFonts.dmSans(
                     fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white)),
+            actions: [
+              ValueListenableBuilder<Set<String>>(
+                valueListenable: PersistenceService.favoritesNotifier,
+                builder: (context, favorites, _) {
+                  final isFav = favorites.contains(widget.widgetId);
+                  return IconButton(
+                    icon: Icon(
+                      isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                      color: isFav ? Colors.redAccent : Colors.white70,
+                    ),
+                    tooltip: isFav ? 'Remove from Favorites' : 'Add to Favorites',
+                    onPressed: _toggleFavoriteFromWidget,
+                  );
+                },
+              ),
+            ],
             bottom: TabBar(
               indicatorColor: AppColors.runButton,
               indicatorSize: TabBarIndicatorSize.tab,

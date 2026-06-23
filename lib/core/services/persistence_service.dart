@@ -10,9 +10,13 @@ class PersistenceService {
   static const String _keyVisitedIds = 'visited_ids';
   static const String _keyFavoriteIds = 'favorite_ids';
 
+  static final ValueNotifier<Set<String>> favoritesNotifier = ValueNotifier<Set<String>>({});
+
   static Future<PersistenceService> init() async {
     final prefs = await SharedPreferences.getInstance();
-    return PersistenceService(prefs);
+    final service = PersistenceService(prefs);
+    favoritesNotifier.value = service.getFavoriteIds();
+    return service;
   }
 
   // ── Theme Mode ─────────────────────────────────────────────────────────────
@@ -70,11 +74,23 @@ class PersistenceService {
     await _prefs.setStringList(_keyFavoriteIds, ids.toList());
   }
 
+  Future<void> toggleFavorite(String id) async {
+    final current = Set<String>.from(favoritesNotifier.value);
+    if (current.contains(id)) {
+      current.remove(id);
+    } else {
+      current.add(id);
+    }
+    favoritesNotifier.value = current;
+    await saveFavoriteIds(current);
+  }
+
   // ── Clear All ──────────────────────────────────────────────────────────────
 
   Future<void> clearAll() async {
     await _prefs.remove(_keyThemeMode);
     await _prefs.remove(_keyVisitedIds);
     await _prefs.remove(_keyFavoriteIds);
+    favoritesNotifier.value = {};
   }
 }

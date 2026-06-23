@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/data/widget_data.dart';
 import '../../../core/widgets/menu_item_card.dart';
+import '../../../core/services/persistence_service.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key, required this.favoriteIds});
@@ -11,12 +12,15 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favorites = WidgetData.allItems.where((w) => favoriteIds.contains(w.id)).toList();
-
     return Scaffold(
       appBar: AppBar(title: const Text('Favorites')),
-      body: favorites.isEmpty
-          ? LayoutBuilder(
+      body: ValueListenableBuilder<Set<String>>(
+        valueListenable: PersistenceService.favoritesNotifier,
+        builder: (context, favoritesSet, _) {
+          final favorites = WidgetData.allItems.where((w) => favoritesSet.contains(w.id)).toList();
+
+          if (favorites.isEmpty) {
+            return LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -44,20 +48,24 @@ class FavoritesScreen extends StatelessWidget {
                   ),
                 );
               },
-            )
-          : ListView(
-              children: favorites.map((item) => MenuItemCard(
-                title: item.name,
-                description: item.description,
-                icon: item.icon,
-                difficulty: item.difficulty,
-                onTap: () {
-                  try {
-                    context.push(item.routePath);
-                  } catch (_) {}
-                },
-              )).toList(),
-            ),
+            );
+          }
+
+          return ListView(
+            children: favorites.map((item) => MenuItemCard(
+              title: item.name,
+              description: item.description,
+              icon: item.icon,
+              difficulty: item.difficulty,
+              onTap: () {
+                try {
+                  context.push(item.routePath);
+                } catch (_) {}
+              },
+            )).toList(),
+          );
+        },
+      ),
     );
   }
 }

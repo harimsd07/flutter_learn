@@ -85,6 +85,14 @@ class _FlutterLearnAppState extends State<FlutterLearnApp> {
 
   Future<void> _initPersistence() async {
     final service = await PersistenceService.init();
+    PersistenceService.favoritesNotifier.addListener(() {
+      if (mounted) {
+        setState(() {
+          _favoriteIds.clear();
+          _favoriteIds.addAll(PersistenceService.favoritesNotifier.value);
+        });
+      }
+    });
     setState(() {
       _persistenceService = service;
       _themeMode = service.getThemeMode();
@@ -95,14 +103,7 @@ class _FlutterLearnAppState extends State<FlutterLearnApp> {
   }
 
   void _toggleFavorite(String id) {
-    setState(() {
-      if (_favoriteIds.contains(id)) {
-        _favoriteIds.remove(id);
-      } else {
-        _favoriteIds.add(id);
-      }
-      _persistenceService?.saveFavoriteIds(_favoriteIds);
-    });
+    _persistenceService?.toggleFavorite(id);
   }
 
   void _markVisited(String id) {
