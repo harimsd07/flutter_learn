@@ -1,11 +1,11 @@
 {
-    "name": "widget_app",
-    "short_name": "widget_app",
+    "name": "FlutterLearn",
+    "short_name": "FlutterLearn",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "FlutterLearn — An interactive Flutter widget learning app with live demos, code snippets, and explanations.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
