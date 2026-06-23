@@ -162,22 +162,34 @@ class _WidgetListCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(10),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border(
-              left: BorderSide(
-                color: isVisited ? AppColors.beginner : accentColor.withValues(alpha: 0.4),
-                width: 3,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : const Color(0x0A000000),
+                width: 1,
               ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            child: Row(
+            child: Stack(
               children: [
-                // Icon
-                Container(
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: 3,
+                  child: Container(
+                    color: isVisited ? AppColors.beginner : accentColor.withValues(alpha: 0.4),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 3),
+                      // Icon
+                      Container(
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
@@ -254,6 +266,9 @@ class _WidgetListCard extends StatelessWidget {
                       },
                     );
                   },
+                ),
+                    ],
+                  ),
                 ),
               ],
             ),
