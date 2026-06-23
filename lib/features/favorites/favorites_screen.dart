@@ -57,6 +57,11 @@ class FavoritesScreen extends StatelessWidget {
               description: item.description,
               icon: item.icon,
               difficulty: item.difficulty,
+              isFavorite: true,
+              onFavoriteToggle: () async {
+                final service = await PersistenceService.init();
+                await service.toggleFavorite(item.id);
+              },
               onTap: () {
                 try {
                   context.push(item.routePath);

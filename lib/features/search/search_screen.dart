@@ -7,6 +7,7 @@ import '../../core/models/widget_item.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/menu_item_card.dart';
+import '../../core/services/persistence_service.dart';
 
 const _kSearchSuggestions = ['Stack', 'ListView', 'animation', 'button', 'form', 'HTTP'];
 
@@ -91,14 +92,25 @@ class _SearchScreenState extends State<SearchScreen> {
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, i) {
                     final item = _results[i];
-                    return MenuItemCard(
-                      title: item.name,
-                      description: item.description,
-                      icon: item.icon,
-                      difficulty: item.difficulty,
-                      categoryName: WidgetData.findCategoryById(item.categoryId)?.name,
-                      onTap: () {
-                        try { context.push(item.routePath); } catch (_) {}
+                    return ValueListenableBuilder<Set<String>>(
+                      valueListenable: PersistenceService.favoritesNotifier,
+                      builder: (context, favorites, _) {
+                        final isFav = favorites.contains(item.id);
+                        return MenuItemCard(
+                          title: item.name,
+                          description: item.description,
+                          icon: item.icon,
+                          difficulty: item.difficulty,
+                          categoryName: WidgetData.findCategoryById(item.categoryId)?.name,
+                          isFavorite: isFav,
+                          onFavoriteToggle: () async {
+                            final service = await PersistenceService.init();
+                            await service.toggleFavorite(item.id);
+                          },
+                          onTap: () {
+                            try { context.push(item.routePath); } catch (_) {}
+                          },
+                        );
                       },
                     );
                   },

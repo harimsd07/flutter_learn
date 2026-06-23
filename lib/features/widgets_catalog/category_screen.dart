@@ -6,6 +6,7 @@ import '../../core/models/widget_category.dart';
 import '../../core/models/widget_item.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/services/persistence_service.dart';
 
 class CategoryScreen extends StatelessWidget {
   const CategoryScreen({
@@ -233,6 +234,26 @@ class _WidgetListCard extends StatelessWidget {
                       color: diffColor,
                     ),
                   ),
+                ),
+                const SizedBox(width: 8),
+                ValueListenableBuilder<Set<String>>(
+                  valueListenable: PersistenceService.favoritesNotifier,
+                  builder: (context, favorites, _) {
+                    final isFav = favorites.contains(item.id);
+                    return IconButton(
+                      icon: Icon(
+                        isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        color: isFav ? Colors.redAccent : (isDark ? AppColors.darkTextSecondary : const Color(0xFFC5CBE0)),
+                        size: 20,
+                      ),
+                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.zero,
+                      onPressed: () async {
+                        final service = await PersistenceService.init();
+                        await service.toggleFavorite(item.id);
+                      },
+                    );
+                  },
                 ),
               ],
             ),

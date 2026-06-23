@@ -136,9 +136,9 @@ class MenuItemCard extends StatelessWidget {
               if (onFavoriteToggle != null)
                 IconButton(
                   icon: Icon(
-                    isFavorite ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
+                    isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                     size: 20,
-                    color: isFavorite ? AppColors.primary : (isDark ? AppColors.darkTextSecondary : const Color(0xFFDDE3F0)),
+                    color: isFavorite ? Colors.redAccent : (isDark ? AppColors.darkTextSecondary : const Color(0xFFC5CBE0)),
                   ),
                   onPressed: onFavoriteToggle,
                   visualDensity: VisualDensity.compact,
