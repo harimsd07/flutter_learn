@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -89,6 +90,39 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // ── Guides & Resources Group ────────────────────────────────────────
+          _SectionHeader(title: 'Guides & Resources', isDark: isDark),
+          const SizedBox(height: 8),
+          _SettingsCard(
+            isDark: isDark,
+            child: ListTile(
+              leading: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.menu_book_outlined,
+                    color: AppColors.primary, size: 18),
+              ),
+              title: Text(
+                'Flutter Setup Guide',
+                style: AppTextStyles.titleMedium(
+                    color: isDark ? AppColors.darkTextPrimary : const Color(0xFF1A1A2E)),
+              ),
+              subtitle: Text(
+                'Setup Flutter on Windows, macOS, and Linux',
+                style: AppTextStyles.bodySmall(
+                    color: isDark ? AppColors.darkTextSecondary : const Color(0xFF5C6278)),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+              onTap: () => context.push('/guides/setup'),
             ),
           ),
 

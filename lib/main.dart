@@ -9,6 +9,7 @@ import 'features/home/home_screen.dart';
 import 'features/progress/progress_screen.dart';
 import 'features/search/search_screen.dart';
 import 'features/settings/settings_screen.dart';
+import 'features/guides/flutter_setup_guide_screen.dart';
 
 // ── Widget demo imports ──────────────────────────────────────────────────────
 import 'widgets/basicWidgets/text_widget.dart';
@@ -172,6 +173,10 @@ class _FlutterLearnAppState extends State<FlutterLearnApp> {
                   onThemeChanged: _changeTheme,
                   onResetProgress: _resetProgress,
                 ),
+              ),
+              GoRoute(
+                path: 'guides/setup',
+                builder: (_, __) => const FlutterSetupGuideScreen(),
               ),
               // ── Basic Widgets ─────────────────────────────────────────────
               GoRoute(path: 'widget/basic/text-widget', builder: (_, __) { _markVisited('text-widget'); return const TextWidget(); }),
